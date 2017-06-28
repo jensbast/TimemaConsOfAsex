@@ -1,6 +1,6 @@
 ## Introduction
 
-dN/dS ratio estimates of mites using [Codeml (PAML)](http://abacus.gene.ucl.ac.uk/software/paml.html).
+dN/dS ratio estimates of Timema using [Codeml (PAML)](http://abacus.gene.ucl.ac.uk/software/paml.html).
 
 The input data don't work with Codeml.
 
