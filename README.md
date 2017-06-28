@@ -8,3 +8,5 @@ This is the repository for the collected scripts used in the study "Consequences
  -[pNpS](pNpS) - scripts for calculation of synonimous and non-synonimous SNPs
  
  -[augment_OG.ipynb](augment_OG.ipynb) - script (ipython notebook) to mine ortholog variants from the OMA ouput
+
+-[polymorphisms_processing.R](polymorphisms_processing.R) - R script to process output from pNpS program and calculate pS, pN and pNpS
