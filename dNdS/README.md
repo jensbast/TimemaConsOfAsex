@@ -2,8 +2,6 @@
 
 dN/dS ratio estimates of Timema using [Codeml (PAML)](http://abacus.gene.ucl.ac.uk/software/paml.html).
 
-The input data don't work with Codeml.
-
 Alignments are in [phylip](http://evolution.genetics.washington.edu/phylip.html) format.
 
 Trees have been generated with [RAxML](http://sco.h-its.org/exelixis/software.html) but have to be reformatted depending on the model.
