@@ -1,0 +1,80 @@
+########################################################
+#Extract Fasta for all shared from OMA output directory#
+########################################################
+cat OrthologousMatrix.txt | sed '1,4d' | awk '{print(i++),$0}' > OrthologousMatrix.numbered.txt
+cat OrthologousMatrix.numbered.txt | grep -w -v '0' > OrthologousMatrix.numbered.allshared
+cat OrthologousMatrix.numbered.allshared | awk {'print"OG"$1".fa"'} > OrthologousMatrix.numbered.allshared.filelist
+#-> these have to be gathered from the output folder "OrthologousGroupsFasta"
+tar -cvf OMA_allshared.tar -T ../OrthologousMatrix.numbered.allshared.filelist
+
+
+###################################################
+#OMA ORTHOLOG AA ALIGNMENTS and nt backtranslation#
+###################################################
+#(following Roux 2014 MBE)
+#-m-coffee (from within t-coffee alignments)
+#in allshared folder (with orthologs shared between all 10 Timema species):
+for f in *.fa; do ~/Software/T_coffee_11.00.8/bin/t_coffee $f -method clustalw2_msa muscle_msa kalign_msa mafftgins_msa t_coffee_msa; done
+
+#check if low quality consensus alignments
+for f in *.html; do sed 's/<\/span>/<\/span>\n/g' $f | grep '<span class=valuedefault>:&nbsp;&nbsp;' | cut -d ';' -f3 | cut -d '<' -f 1 | awk '{if ($1<=75) print$1}'; done
+
+#backtranslation to nucleotide alignments:
+#http://www.tcoffee.org/Documentation/t_coffee/t_coffee_tutorial.htm#_Toc235985453
+
+#get CDS for back-translation:
+for f in *.fa; do cat $f | grep '>' | cut -d " " -f 1 | sed 's/>//g' > $f.ids; done
+
+#put in tmp dir and extract from file with all transdecoder cds merged
+for f in *.fa.ids; do ~/Dropbox/scripts/extract_contigs.py -i ../Tall.transdecoder.cds -l $f -o $f.cds; done
+
+#rename
+rename 's/\.fa.ids.cds/\.cds/' *.fa.ids.cds
+rename 's/\.cds/\.aln.cds/' *.cds
+
+#backtranslation
+for f in *.aln; do ~/Software/T_coffee_11.00.8/bin/t_coffee -other_pg seq_reformat -in $f -in2 $f.cds -action +thread_dna_on_prot_aln -output fasta > $f.back ; done
+
+#Gblocks curation
+#gblocks v091.b type: codons, no gaps allowed
+for f in *.back; do ~/Software/Gblocks_0.91b/Gblocks $f -t=c -b4=4; done
+
+
+
+###############################
+#RAxML prep and run for codeml#
+###############################
+
+#convert gblocks curated output into fasta (to avoid spaces between)
+for f in *.back-gb; do ~/Dropbox/scripts/convert.py -i $f -o $f.conv -t fasta; done
+
+#delete anything after "_" in header to make compatible to RAXML species tree
+for f in *.conv; do cat $f | cut -d "_" -f1 > $f.cut; done
+
+#convert to phylip:
+for f in *.cut; do ~/Dropbox/scripts/fasta2phylip.pl -c 30 $f > $f.phy; done
+
+#check if phy non-dividable by zero
+for f in *.phy; do cat $f | awk '{print $2/3}' | grep '\.'; done
+
+#rename
+rename 's/\.aln.back-gb.conv.cut.phy/\.phy/' *.aln.back-gb.conv.cut.phy
+
+#run RAXML with topology file
+for f in *.phy; do ~/Software/RAxML/raxmlHPC -f e -t topology -m GTRCATI -s $f -n $f.results ; done
+
+#using a topology file containing newick tree (unrooted):
+(((Tdi,Tps),(Tsi,Tcm)),(Tms, Tce),((Tge,Tpa),(Tte,Tbi)));​
+
+#check if all RAXML results start with same alignment:
+for f in RAxML_result*; do grep -H -v '^(((((Tdi' $f; done
+
+
+#modeltest to see if mostly same substitution model:
+for f in *.conv.cut; do java -jar ~/Software/jmodeltest2/dist/jModelTest.jar -d $f -g 4 -i -f -AIC > $f.jmt; done
+#-> check if convergening mostly to same model
+cat *.jmt | grep -A 4 'Best Models' | grep 'AIC' | cut -f 2 | sort | uniq -c | sort -rnk1
+#-> Not converging, just take most parameterrich model
+
+
+
