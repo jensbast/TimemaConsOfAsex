@@ -6,3 +6,5 @@ This is the repository for the collected scripts used in the study "Consequences
 ### Components
 
  -[pNpS](pNpS) - scripts for calculation of synonimous and non-synonimous SNPs
+ 
+ -[augment_OG.ipynb](augment_OG.ipynb) - script (ipython notebook) to mine ortholog variants from the OMA ouput
