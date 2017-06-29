@@ -133,7 +133,7 @@ def model2rate(raxml_before, raxml_after):
 		
 		complete_format = []
 
-		# The branch length are multiplied by 3 and branch label is added (sex or asex)
+		# The branch length are multiplied by 3 and branch label is added (sex + asex)
 		
 		part0 = split_raxml[0].split(":")[0] + ":" + str(round(float(split_raxml[0].split(":")[1])*3,9)) + "#1"
 		part1 = split_raxml[1].split(":")[0] + ":" + str(round(float(split_raxml[1].split(":")[1].split(")")[0])*3,9)) + "#1" + "):" + str(round(float(split_raxml[1].split(":")[2])*3,9))
@@ -181,7 +181,7 @@ def modelFree(raxml_before, raxml_after):
 		
 		complete_format = []
 
-		# The branch length are multiplied by 3 and branch label is added (sex or asex)
+		# The branch length are multiplied by 3
 				
 		part0 = split_raxml[0].split(":")[0] + ":" + str(round(float(split_raxml[0].split(":")[1])*3,9))
 		part1 = split_raxml[1].split(":")[0] + ":" + str(round(float(split_raxml[1].split(":")[1].split(")")[0])*3,9)) + "):" + str(round(float(split_raxml[1].split(":")[2])*3,9))
