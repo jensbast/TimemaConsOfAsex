@@ -5,7 +5,7 @@ This is the repository for the collected scripts used in the study "Consequences
 
 ### Components
 
-- [pNpS estimates](pNpS) - scripts for calculation of synonimous and non-synonimous SNPs
+- [pNpS estimates](pNpS) - scripts for calculation of synonymous and non-synonymous SNPs
 - [dNdS estimates](dNdS) - script that uses alignments and RaXML branch-lengths calculate dN dS with codeml in the PAML package and outputs a table with all metrics
 - [augment_OG.ipynb](augment_OG.ipynb) - script (ipython notebook) to mine ortholog variants from the OMA ouput
 - [polymorphisms_processing.R](polymorphisms_processing.R) - R script to process output from pNpS program and calculate pS, pN and pNpS
