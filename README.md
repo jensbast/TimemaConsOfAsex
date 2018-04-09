@@ -1,7 +1,8 @@
 # TimemaConsOfAsex
 
-This is the repository for the collected scripts used in the study "Consequences of asexuality in natural populations" (Bast et al.).
+This is the repository for the collected scripts used in the study "Consequences of asexuality in natural populations: insight from stick insects" (Bast et al. 2018, MBE).
 
+The frozen code at the time of publication can be found here: https://github.com/jensbast/TimemaConsOfAsex/releases/tag/v1.0
 
 ### Components
 
